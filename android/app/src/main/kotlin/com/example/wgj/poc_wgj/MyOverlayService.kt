@@ -1,6 +1,5 @@
 package com.example.wgj.poc_wgj
 
-
 import android.app.Service
 import android.content.Intent
 import android.graphics.PixelFormat
@@ -10,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.content.SharedPreferences
 
 class MyOverlayService : Service() {
     private lateinit var windowManager: WindowManager
@@ -19,16 +19,20 @@ class MyOverlayService : Service() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
+        val sharedPref = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+        val x = sharedPref.getInt("x_coord", 100) // default values
+        val y = sharedPref.getInt("y_coord", 100) // default values
+
         val params = WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = 100 // Adjust the x position
-            y = 100 // Adjust the y position
+            this.x = x // Use retrieved x position
+            this.y = y // Use retrieved y position
         }
 
         val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater

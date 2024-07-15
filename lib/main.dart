@@ -51,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () async {
             await requestOverlayPermission();
             await startOverlayService();
+
             const phoneNumber = '+917597924752';
             var url = Uri.parse('https://wa.me/$phoneNumber');
             if (await canLaunchUrl(url)) {
