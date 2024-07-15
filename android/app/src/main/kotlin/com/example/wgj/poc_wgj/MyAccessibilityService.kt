@@ -1,35 +1,37 @@
 package com.example.wgj.poc_wgj
 
-
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
-import android.content.SharedPreferences
+import android.graphics.Rect
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import android.util.Log
 
 class MyAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-    Log.d("AccessibilityService", "WGJ-3")
         if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val rootNode = rootInActiveWindow
             rootNode?.let {
-                findAndLogVideoCallButton(it)
+                findAndClickVideoCallButton(it)
             }
         }
     }
 
-    private fun findAndLogVideoCallButton(node: AccessibilityNodeInfo) {
-    
+    private fun findAndClickVideoCallButton(node: AccessibilityNodeInfo) {
         if (node.className == "android.widget.ImageButton" && node.contentDescription == "Video call") {
-            val bounds = android.graphics.Rect()
+            // Perform the click action
+            node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+            Log.d("MyAccessibilityService", "Clicked on the Video call button")
+
+            // Log the coordinates for debugging
+            val bounds = Rect()
             node.getBoundsInScreen(bounds)
             val x = bounds.centerX()
             val y = bounds.centerY()
-            // Log the coordinates
-            Log.d("AccessibilityService", "Video call button coordinates: x=$x, y=$y")
-            // Save coordinates in SharedPreferences
+            Log.d("MyAccessibilityService", "Video call button coordinates: x=$x, y=$y")
+
+            // Save coordinates in SharedPreferences for debugging or further use
             val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
             with(sharedPref.edit()) {
                 putInt("x_coord", x)
@@ -39,11 +41,11 @@ class MyAccessibilityService : AccessibilityService() {
         }
 
         for (i in 0 until node.childCount) {
-            findAndLogVideoCallButton(node.getChild(i))
+            findAndClickVideoCallButton(node.getChild(i))
         }
     }
 
     override fun onInterrupt() {
-        // Handle interruptions
+        Log.d("MyAccessibilityService", "Service interrupted")
     }
 }

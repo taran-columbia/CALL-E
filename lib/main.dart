@@ -49,8 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            await requestOverlayPermission();
-            await startOverlayService();
+            // await requestOverlayPermission();
+            // await startOverlayService();
 
             const phoneNumber = '+917597924752';
             var url = Uri.parse('https://wa.me/$phoneNumber');
