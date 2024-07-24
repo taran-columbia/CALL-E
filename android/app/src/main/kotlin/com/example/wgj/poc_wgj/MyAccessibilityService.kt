@@ -47,14 +47,12 @@ class MyAccessibilityService : AccessibilityService() {
                             Log.d("MyAccessibilityService", "Window State Changed -9")
                             handleCallTermination()
                         }
-                        else if (callType == "Video call") {
+                        else if (callType == "Video call" || callType == "Voice call") {
                             Log.d("MyAccessibilityService", "Window State Changed -5")
                             val editor = sharedPref.edit()
                             editor.remove("callType")
                             editor.apply()
                             handleCallInitiation(it, callType)
-                        }
-                        else if(callType == "Voice call"){
                         }
                         
                     }
