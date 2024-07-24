@@ -35,10 +35,33 @@ class _HomeScreenState extends State<HomeScreen> {
     print('Hi in flutter again');
     resetPref();
     // checkAccessibilityService(context);
-    isAccessibilityServiceEnabled(context);
   }
 
-  
+  Future<void> initiateCall(String callType, BuildContext context) async {
+    resetPref();
+    const phoneNumber = '+917597924752';
+    // Set the flag indicating the call was initiated by the Flutter app
+    if (callType == 'Phone call') {
+      await makePhoneCall(phoneNumber);
+    } else {
+      final bool isEnabled = await isAccessibilityServiceEnabled(context);
+       if (!isEnabled) {
+        _showAccessibilityServiceDialog(context);
+      }else{
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isInitiatedByCALLE', true);
+        await prefs.setString('callType', callType);
+        // Launch WhatsApp with the specific contact
+        var url = Uri.parse('https://wa.me/$phoneNumber');
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url);
+        } else {
+          throw 'Could not launch $url';
+        }
+      }
+    }
+  }
+
   void resetPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('isInitiatedByCALLE');
@@ -46,27 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.remove('returnFromCall');
   }
 
-  // Future<void> checkAccessibilityService(BuildContext context) async {
-  //   var status = await Permission.accessNotificationPolicy.status;
 
-  //   if (!status.isGranted) {
-  //     _showAccessibilityServiceDialog(context);
-  //   } else {
-  //     // Accessibility service is enabled, proceed with your logic
-  //     print('Accessibility Service is enabled.');
-  //   }
-  // }
-
-  Future<void> isAccessibilityServiceEnabled(BuildContext context) async {
-    final bool isEnabled =
-        await platform.invokeMethod('isAccessibilityServiceEnabled');
-    // return isEnabled;
-    if (!isEnabled) {
-      _showAccessibilityServiceDialog(context);
-    } else {
-      // Accessibility service is enabled, proceed with your logic
-      print('Accessibility Service is enabled.');
-    }
+  Future<bool> isAccessibilityServiceEnabled(BuildContext context) async {
+    final bool isEnabled = await platform.invokeMethod('isAccessibilityServiceEnabled');
+    return isEnabled;
   }
 
   void _showAccessibilityServiceDialog(BuildContext context) {
@@ -76,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return AlertDialog(
           title: const Text('Accessibility Service'),
           content: const Text(
-              'Accessibility Service is not enabled. Please enable it in the settings and try again.'),
+              'Accessibility Service is not enabled. Please enable it in the settings first and then try again.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -95,36 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
     platform.invokeMethod('openAccessibilitySettings');
   }
 
-  Future<void> initiateCall(String callType) async {
-    // Set the flag indicating the call was initiated by the Flutter app
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final bool isEnabled = await platform.invokeMethod('isAccessibilityServiceEnabled');
-    // if(isEnabled){
-    //   print('This should print');
-    // }
-    // await prefs.remove('isInitiatedByCALLE');
-    // await prefs.remove('callType');
-    // await prefs.remove('returnFromCall');
-
-    print("Window State Changed-3 $callType");
-    await prefs.setBool('isInitiatedByCALLE', true);
-    // await prefs.setBool('isInitiatedByCALLEE', true);
-    await prefs.setString('callType', callType);
-
-    // Launch WhatsApp with the specific contact
-    const phoneNumber = '+917597924752';
-    var url = Uri.parse('https://wa.me/$phoneNumber');
-    if (callType == 'Phone call') {
-      // url = Uri.parse('tel:$phoneNumber');
-      await makePhoneCall(phoneNumber);
-    }
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   Future<void> makePhoneCall(String phoneNumber) async {
     var status = await Permission.phone.status;
     if (status.isGranted) {
@@ -138,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-Future<void> dialNumber(String phoneNumber) async {
+  Future<void> dialNumber(String phoneNumber) async {
     try {
       final bool result = await platform.invokeMethod('makeCall', phoneNumber);
       if (!result) {
@@ -158,19 +134,19 @@ Future<void> dialNumber(String phoneNumber) async {
           child: Column(children: <Widget>[
         ElevatedButton(
           onPressed: () async {
-            await initiateCall('Video call');
+            await initiateCall('Video call', context);
           },
           child: const Text('WhatsApp Video Call'),
         ),
         ElevatedButton(
           onPressed: () async {
-            await initiateCall('Voice call');
+            await initiateCall('Voice call', context);
           },
           child: const Text('WhatsApp Voice Call'),
         ),
         ElevatedButton(
           onPressed: () async {
-            await initiateCall('Phone call');
+            await initiateCall('Phone call', context);
           },
           child: const Text('Phone Call'),
         ),
