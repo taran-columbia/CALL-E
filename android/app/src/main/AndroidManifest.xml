@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"/>
      <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
      <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <application
         android:label="poc_wgj"
         android:name="${applicationName}"

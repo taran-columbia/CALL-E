@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     print('Hi in flutter again');
     resetPref();
-    checkAccessibilityService(context);
+    // checkAccessibilityService(context);
+    isAccessibilityServiceEnabled(context);
   }
 
 void resetPref() async {
@@ -44,10 +45,21 @@ void resetPref() async {
     await prefs.remove('returnFromCall');
   }
 
-  Future<void> checkAccessibilityService(BuildContext context) async {
-    var status = await Permission.accessNotificationPolicy.status;
+  // Future<void> checkAccessibilityService(BuildContext context) async {
+  //   var status = await Permission.accessNotificationPolicy.status;
 
-    if (!status.isGranted) {
+  //   if (!status.isGranted) {
+  //     _showAccessibilityServiceDialog(context);
+  //   } else {
+  //     // Accessibility service is enabled, proceed with your logic
+  //     print('Accessibility Service is enabled.');
+  //   }
+  // }
+
+  Future<void> isAccessibilityServiceEnabled(BuildContext context) async {
+    final bool isEnabled = await platform.invokeMethod('isAccessibilityServiceEnabled');
+    // return isEnabled;
+    if (!isEnabled) {
       _showAccessibilityServiceDialog(context);
     } else {
       // Accessibility service is enabled, proceed with your logic
@@ -84,6 +96,10 @@ void resetPref() async {
   Future<void> initiateCall(String callType) async {
     // Set the flag indicating the call was initiated by the Flutter app
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final bool isEnabled = await platform.invokeMethod('isAccessibilityServiceEnabled');
+    // if(isEnabled){
+    //   print('This should print');
+    // }
     // await prefs.remove('isInitiatedByCALLE');
     // await prefs.remove('callType');
     // await prefs.remove('returnFromCall');
@@ -96,6 +112,9 @@ void resetPref() async {
     // Launch WhatsApp with the specific contact
     const phoneNumber = '+917597924752';
     var url = Uri.parse('https://wa.me/$phoneNumber');
+    if(callType == 'Phone call'){
+      url = Uri.parse('tel:$phoneNumber');
+    }
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
     } else {
@@ -123,7 +142,7 @@ void resetPref() async {
         ),
         ElevatedButton(
           onPressed: () async {
-            await initiateCall('Phone_Call');
+            await initiateCall('Phone call');
           },
           child: const Text('Phone Call'),
         ),
