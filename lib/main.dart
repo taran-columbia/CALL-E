@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    print('Hi in flutter again');
     resetPref();
     checkAccessibilityService(context);
   }
@@ -93,7 +94,7 @@ void resetPref() async {
     await prefs.setString('callType', callType);
 
     // Launch WhatsApp with the specific contact
-    const phoneNumber = '+918949197676';
+    const phoneNumber = '+917597924752';
     var url = Uri.parse('https://wa.me/$phoneNumber');
     if (await canLaunchUrl(url)) {
       await launchUrl(url);

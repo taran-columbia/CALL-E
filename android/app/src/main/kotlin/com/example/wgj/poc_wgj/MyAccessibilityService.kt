@@ -90,7 +90,7 @@ class MyAccessibilityService : AccessibilityService() {
         editor.remove("flutter.returnFromCall")
         editor.remove("flutter.isInitiatedByCALLE")
         editor.apply()
-        val redirectIntent = Intent(this, FlutterActivity::class.java)
+        val redirectIntent = Intent(this, MainActivity::class.java)
         redirectIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             startActivity(redirectIntent)

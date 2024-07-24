@@ -9,6 +9,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.provider.Settings
+import android.util.Log
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.example.wgj.poc_wgj/accessibility"
@@ -33,6 +34,7 @@ class MainActivity : FlutterActivity() {
                         openAccessibilitySettings()
                         result.success(null)
                     } else {
+                        Log.d("MainActivity", "Window State Changed -12")
                         result.notImplemented()
                     }
                 }
