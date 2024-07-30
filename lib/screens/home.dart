@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:poc_wgj/constants.dart';
 import 'package:poc_wgj/database/db_helper.dart';
 import 'package:poc_wgj/models/contact_model.dart';
+import 'package:poc_wgj/screens/call_logs.dart';
 import 'package:poc_wgj/screens/calling.dart';
 import 'package:poc_wgj/screens/contacts.dart';
 import 'package:poc_wgj/widgets/loader.dart';
@@ -144,6 +145,18 @@ class _HomeState extends State<Home> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => Contacts(
+                          existingContacts: _contactList,
+                        )),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.notifications_active),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CallLogScreen(
                           existingContacts: _contactList,
                         )),
               );
