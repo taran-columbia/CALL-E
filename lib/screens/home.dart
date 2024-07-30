@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:poc_wgj/constants.dart';
 import 'package:poc_wgj/database/db_helper.dart';
 import 'package:poc_wgj/models/contact_model.dart';
+import 'package:poc_wgj/screens/calling.dart';
+import 'package:poc_wgj/screens/contacts.dart';
 import 'package:poc_wgj/widgets/loader.dart';
 
 class Home extends StatefulWidget {
@@ -60,12 +62,27 @@ class _HomeState extends State<Home> {
             onTap: () {
               // Handle the tap event
               print('Tapped on ${contact.name}');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      Calling(contact: ContactItem(name: contact.name, phoneNumber: contact.phoneNumber, id: contact.id, image: contact.image)),
+                ),
+              );
               // Navigate to a detail screen or show a dialog
             },
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
+                border: Border.all(color: AppColors.secondaryColor),
                 borderRadius: BorderRadius.circular(8.0),
+                boxShadow: [
+              BoxShadow(
+                color: AppColors.secondaryColor.withOpacity(0.2), // Shadow color
+                spreadRadius: 2, // How much the shadow spreads
+                blurRadius: 10, // The blur effect of the shadow
+                offset: const Offset(0, 5), // The offset of the shadow
+              ),
+            ],
               ),
               child: contact.image != null
                   ? ClipRRect(
@@ -77,7 +94,15 @@ class _HomeState extends State<Home> {
                         height: double.infinity,
                       ),
                     )
-                  : const Center(child: Icon(Icons.image, size: 50.0, color: Colors.grey)),
+                  : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Icon(Icons.image_not_supported_outlined, size: 50.0, color: AppColors.secondaryColor),
+                        Text(contact.name, style: const TextStyle(color: AppColors.secondaryColor, fontWeight: FontWeight.bold),)
+                      ],
+                    ) 
+                    ),
             ),
           );
         },
@@ -86,19 +111,34 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
+        leading:const Icon(Icons.phone),
         title: const Text(
           'CALL-E',
           style: TextStyle(color: Colors.white, fontFamily: 'Poppins', fontWeight: FontWeight.w600),
         ),
         backgroundColor: AppColors.primaryColor,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      Contacts(existingContacts: _contactList,)
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: body,
-      floatingActionButton: IconButton(
-        onPressed: (){
-          Navigator.pushNamed(context, '/contacts');
-        }, 
-        icon: const Icon(Icons.add),
-      ),
+      // floatingActionButton: IconButton(
+      //   onPressed: (){
+      //     Navigator.pushNamed(context, '/contacts');
+      //   }, 
+      //   icon: const Icon(Icons.add),
+      // ),
     );
   }
 }

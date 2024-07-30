@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 class AppColors {
   // Colors
   // static const Map<String, dynamic> constants = {
-    static const Color primaryColor= Colors.greenAccent;
+    static const Color primaryColor= Color.fromARGB(255, 14, 152, 86);
     static const Color accentColor = Colors.green;
-    static const Color backgroundColor= Color.fromRGBO(255, 248, 231, 1.0);
-    static const Color titleTextColor= Color.fromRGBO(142, 36, 170, 1);
+    // static const Color backgroundColor= Color.fromRGBO(255, 248, 231, 1.0);
+    static const Color backgroundColor= Color.fromARGB(255, 36, 16, 74);
+    static const Color titleTextColor= Color.fromRGBO(36, 170, 38, 1);
     static const Color infoTextColor = Colors.purple;
     static const Color secondaryColor = Colors.purple;
     static const Color buttonColor= Color.fromRGBO(255, 255, 0, 0.8);

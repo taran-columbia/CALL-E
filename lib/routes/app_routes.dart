@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poc_wgj/screens/calling.dart';
-import 'package:poc_wgj/screens/contacts.dart';
+// import 'package:poc_wgj/screens/contacts.dart';
 import 'package:poc_wgj/screens/home.dart';
 import 'package:poc_wgj/screens/loading.dart';
 
@@ -18,8 +18,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const Loading());
       case calling:
         return MaterialPageRoute(builder: (_) => const Calling());
-      case contacts:
-        return MaterialPageRoute(builder: (_) => Contacts());
+      // case contacts:
+      //   return MaterialPageRoute(builder: (_) => Contacts());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

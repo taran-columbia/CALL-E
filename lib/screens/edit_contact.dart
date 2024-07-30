@@ -10,18 +10,16 @@ import 'package:poc_wgj/models/contact_model.dart';
 import 'package:poc_wgj/routes/app_routes.dart';
 
 Future<Uint8List?> getImageBytes(File? imageFile) async {
-  if(imageFile == null || !await imageFile.exists()){
+  if (imageFile == null || !await imageFile.exists()) {
     return null;
   }
-    return await imageFile.readAsBytes();
+  return await imageFile.readAsBytes();
 }
 
-
 class EditContact extends StatefulWidget {
-   final String name;
-   final String phoneNumber;
+  final ContactItem contact;
 
-  EditContact({required this.name, required this.phoneNumber});
+  EditContact({required this.contact});
 
   @override
   _EditContactState createState() => _EditContactState();
@@ -29,13 +27,15 @@ class EditContact extends StatefulWidget {
 
 class _EditContactState extends State<EditContact> {
   TextEditingController _nameController = TextEditingController();
-  File? _imageFile;
+  bool saveButtonEnabled = true;
+  Uint8List? _imageFile;
 
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.name;
-    
+    _nameController.text = widget.contact.name;
+    _imageFile = widget.contact.image;
+    _nameController.addListener(_updateSaveButtonState);
   }
 
   @override
@@ -44,35 +44,40 @@ class _EditContactState extends State<EditContact> {
     super.dispose();
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    
+  void _updateSaveButtonState() {
+    setState(() {
+      saveButtonEnabled = _nameController.text.isNotEmpty;
+    });
+  }
 
+  Future<void> _pickImage(ImageSource source) async {
     try {
       final pickedFile = await ImagePicker().pickImage(source: source);
       if (pickedFile != null) {
-      CroppedFile? croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Crop Image',
-            toolbarColor: AppColors.primaryColor,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.square,
-            lockAspectRatio: false,
-          ),
-          IOSUiSettings(
-            minimumAspectRatio: 1.0,
-          ),
-        ],
-      );
-      
+        CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: AppColors.primaryColor,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.square,
+              lockAspectRatio: false,
+            ),
+            IOSUiSettings(
+              minimumAspectRatio: 1.0,
+            ),
+          ],
+        );
 
-      if (croppedFile != null) {
-        setState(() {
-          _imageFile = File(croppedFile.path);
-        });
+        if (croppedFile != null) {
+          File filePath = File(croppedFile.path);
+          Uint8List? image = await getImageBytes(filePath);
+          setState(() {
+            _imageFile = image;
+          });
+        }
       }
-    }
     } catch (e) {
       print('Error pick image wgj $e');
     }
@@ -86,19 +91,58 @@ class _EditContactState extends State<EditContact> {
   //   Navigator.pop(context); // Go back to the previous screen
   // }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
-        title: const Text('Contact Details', style: TextStyle(color: Colors.white),),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.save),
-        //     onPressed: _saveContact,
-        //   ),
-        // ],
+        title: const Text(
+          'Contact Details',
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          if (widget.contact.id != null)
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () async {
+                await DBHelper().deleteContact(widget.contact.id!);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.home,
+                  (Route<dynamic> route) =>
+                      false, // This condition removes all previous routes
+                );
+              },
+            ),
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: saveButtonEnabled ? () async {
+              // Uint8List? image = await getImageBytes(_imageFile);
+              // print('id is printed wgj ${}');
+              if (widget.contact.id == null) {
+                ContactItem contactDetails = ContactItem(
+                    name: _nameController.text,
+                    phoneNumber: widget.contact.phoneNumber,
+                    image: _imageFile);
+                await DBHelper().insertContact(contactDetails);
+              } else {
+                ContactItem contactDetails = ContactItem(
+                    name: _nameController.text,
+                    phoneNumber: widget.contact.phoneNumber,
+                    image: _imageFile,
+                    id: widget.contact.id);
+                await DBHelper().updateContact(contactDetails);
+              }
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.home,
+                (Route<dynamic> route) =>
+                    false, // This condition removes all previous routes
+              );
+            }: null,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -106,7 +150,7 @@ class _EditContactState extends State<EditContact> {
           children: <Widget>[
             _imageFile != null
                 ? ClipOval(
-                    child: Image.file(
+                    child: Image.memory(
                       _imageFile!,
                       width: 200.0,
                       height: 200.0,
@@ -121,7 +165,9 @@ class _EditContactState extends State<EditContact> {
                       child: const Icon(Icons.person, size: 50),
                     ),
                   ),
-            const SizedBox(height: 20.0,),
+            const SizedBox(
+              height: 20.0,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -139,26 +185,28 @@ class _EditContactState extends State<EditContact> {
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Name'),
             ),
-            const SizedBox(height: 20.0,),
+            const SizedBox(
+              height: 20.0,
+            ),
             TextField(
-              controller: TextEditingController(text: widget.phoneNumber),
+              controller:
+                  TextEditingController(text: widget.contact.phoneNumber),
               decoration: const InputDecoration(labelText: 'Phone Number'),
               enabled: false,
             ),
           ],
         ),
       ),
-      floatingActionButton: IconButton(onPressed: () async {
-        Uint8List? image = await getImageBytes(_imageFile);
-        ContactItem contactDetails = ContactItem(name: _nameController.text, phoneNumber: widget.phoneNumber, image: image);
-        await DBHelper().insertContact(contactDetails);
-        Navigator.pushNamedAndRemoveUntil(
-          context, 
-          AppRoutes.home,
-          (Route<dynamic> route) => false, // This condition removes all previous routes
-        );
-      }, icon: const Icon(Icons.save)),
+      // floatingActionButton: IconButton(onPressed: () async {
+      //   Uint8List? image = await getImageBytes(_imageFile);
+      //   ContactItem contactDetails = ContactItem(name: _nameController.text, phoneNumber: widget.phoneNumber, image: image);
+      //   await DBHelper().insertContact(contactDetails);
+      //   Navigator.pushNamedAndRemoveUntil(
+      //     context,
+      //     AppRoutes.home,
+      //     (Route<dynamic> route) => false, // This condition removes all previous routes
+      //   );
+      // }, icon: const Icon(Icons.save)),
     );
   }
 }
-  

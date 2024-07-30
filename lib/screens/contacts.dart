@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:poc_wgj/constants.dart';
+import 'package:poc_wgj/models/contact_model.dart';
 import 'package:poc_wgj/screens/edit_contact.dart';
 import 'package:poc_wgj/widgets/loader.dart';
 
 class Contacts extends StatefulWidget {
+  final List<ContactItem> existingContacts;
+  Contacts({required this.existingContacts});
   @override
   _ContactsState createState() => _ContactsState();
 }
@@ -13,12 +16,14 @@ class Contacts extends StatefulWidget {
 class _ContactsState extends State<Contacts> {
   List<Contact> contacts = [];
   List<Contact> filteredContacts = [];
-  TextEditingController _searchController = TextEditingController();
+  List<ContactItem?> existingContacts = [];
+  final TextEditingController _searchController = TextEditingController();
   bool loading = false;
 
   @override
   void initState() {
     super.initState();
+    existingContacts = widget.existingContacts;
     loadContacts();
     _searchController.addListener(_filterContacts);
   }
@@ -48,9 +53,11 @@ class _ContactsState extends State<Contacts> {
 
   Future<void> getContacts() async {
     List<Contact> fetchedContacts = await getContactList();
+    final Set<String> contactItemNumbers = existingContacts.map((item) => item?.phoneNumber ?? '').toSet();
+    List<Contact> finalFetchedContacts = fetchedContacts.where((contact) => !contactItemNumbers.contains(contact.phones!.first.value)).toList();
     setState(() {
-      contacts = fetchedContacts;
-      filteredContacts = fetchedContacts;
+      contacts = finalFetchedContacts.isEmpty ? []: finalFetchedContacts;
+      filteredContacts = finalFetchedContacts.isEmpty ? []: finalFetchedContacts;
       loading = false;
     });
   }
@@ -81,7 +88,7 @@ class _ContactsState extends State<Contacts> {
   }
 
   Future<List<Contact>> getContactList() async {
-    Iterable<Contact> contacts = await ContactsService.getContacts();
+    Iterable<Contact> contacts = await ContactsService.getContacts(withThumbnails: false);
     // Filter out contacts without a phone number
     List<Contact> filteredContacts =
         contacts.where((contact) => contact.phones!.isNotEmpty).toList();
@@ -135,7 +142,7 @@ class _ContactsState extends State<Contacts> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  EditContact(name: contact.displayName ?? '', phoneNumber: contact.phones!.first.value ?? '',),
+                                  EditContact(contact: ContactItem(name: contact.displayName ?? '', phoneNumber: contact.phones!.first.value ?? '',)),
                             ),
                           );
                         },
@@ -163,7 +170,7 @@ class _ContactsState extends State<Contacts> {
           'Contacts',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: AppColors.primaryColor,
       ),
       body: body,
       backgroundColor: AppColors.backgroundColor,

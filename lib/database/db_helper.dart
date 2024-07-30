@@ -81,6 +81,7 @@ class DBHelper {
   // Method to update an item in the items table
   Future<int> updateContact(ContactItem contact) async {
     try {
+      print('update contact ${contact.id}');
       final db = await database;
       return await db!.update(
         'contacts',
