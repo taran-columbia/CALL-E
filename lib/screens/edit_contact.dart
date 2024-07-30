@@ -94,165 +94,172 @@ class _EditContactState extends State<EditContact> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        title: const Text(
-          'Contact Details',
-          style: TextStyle(color: Colors.white),
-        ),
-        actions: [
-          if (widget.contact.id != null)
+        backgroundColor: AppColors.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: AppColors.primaryColor,
+          title: const Text(
+            'Contact Details',
+            style: TextStyle(color: Colors.white),
+          ),
+          actions: [
+            if (widget.contact.id != null)
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () async {
+                  await DBHelper().deleteContact(widget.contact.id!);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppRoutes.home,
+                    (Route<dynamic> route) =>
+                        false, // This condition removes all previous routes
+                  );
+                },
+              ),
             IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () async {
-                await DBHelper().deleteContact(widget.contact.id!);
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  AppRoutes.home,
-                  (Route<dynamic> route) =>
-                      false, // This condition removes all previous routes
-                );
-              },
-            ),
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: saveButtonEnabled ? () async {
-              // Uint8List? image = await getImageBytes(_imageFile);
-              // print('id is printed wgj ${}');
-              if (widget.contact.id == null) {
-                ContactItem contactDetails = ContactItem(
-                    name: _nameController.text,
-                    phoneNumber: widget.contact.phoneNumber,
-                    image: _imageFile);
-                await DBHelper().insertContact(contactDetails);
-              } else {
-                ContactItem contactDetails = ContactItem(
-                    name: _nameController.text,
-                    phoneNumber: widget.contact.phoneNumber,
-                    image: _imageFile,
-                    id: widget.contact.id);
-                await DBHelper().updateContact(contactDetails);
-              }
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.home,
-                (Route<dynamic> route) =>
-                    false, // This condition removes all previous routes
-              );
-            }: null,
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            _imageFile != null
-                ? ClipOval(
-                    child: Image.memory(
-                      _imageFile!,
-                      width: 200.0,
-                      height: 200.0,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : ClipOval(
-                    child: Container(
-                      width: 200.0,
-                      height: 200.0,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.person, size: 50),
-                    ),
-                  ),
-            const SizedBox(
-              height: 20.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.photo_library, color: Colors.white),
-                  onPressed: () => _pickImage(ImageSource.gallery),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.camera_alt, color: Colors.white,),
-                  onPressed: () => _pickImage(ImageSource.camera),
-                ),
-              ],
-            ),
-            TextField(
-              controller: _nameController,
-              style: const TextStyle(
-                color: Colors.white, // Text color
-              ),
-              cursorColor: Colors.white,
-              decoration: const InputDecoration(
-            labelText: 'Name',
-            labelStyle: TextStyle(
-              color: Colors.white, // Label text color
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.white, // Border color when focused
-                width: 2.0,
-              ),
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.white, // Border color when not focused
-                width: 2.0,
-              ),
-            ),
-            filled: true,
-            fillColor: Colors.transparent, // Background color
-          ),
-        
-            ),
-            const SizedBox(
-              height: 20.0,
-            ),
-            TextField(
-              style: const TextStyle(
-                color: Colors.white, // Text color
-              ),
-              controller:
-                  TextEditingController(text: widget.contact.phoneNumber),
-              decoration: const InputDecoration(
-            labelText: 'Phone Number',
-            labelStyle: TextStyle(
-              color: Colors.white, // Label text color
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.white, // Border color when focused
-                width: 2.0,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.white, // Border color when not focused
-                width: 2.0,
-              ),
-            ),
-            filled: true,
-            fillColor: Colors.transparent, // Background color
-          ),
-              enabled: false,
+              icon: const Icon(Icons.save),
+              onPressed: saveButtonEnabled
+                  ? () async {
+                      // Uint8List? image = await getImageBytes(_imageFile);
+                      // print('id is printed wgj ${}');
+                      if (widget.contact.id == null) {
+                        ContactItem contactDetails = ContactItem(
+                            name: _nameController.text,
+                            phoneNumber: widget.contact.phoneNumber,
+                            image: _imageFile);
+                        await DBHelper().insertContact(contactDetails);
+                      } else {
+                        ContactItem contactDetails = ContactItem(
+                            name: _nameController.text,
+                            phoneNumber: widget.contact.phoneNumber,
+                            image: _imageFile,
+                            id: widget.contact.id);
+                        await DBHelper().updateContact(contactDetails);
+                      }
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.home,
+                        (Route<dynamic> route) =>
+                            false, // This condition removes all previous routes
+                      );
+                    }
+                  : null,
             ),
           ],
         ),
-      ),
-      // floatingActionButton: IconButton(onPressed: () async {
-      //   Uint8List? image = await getImageBytes(_imageFile);
-      //   ContactItem contactDetails = ContactItem(name: _nameController.text, phoneNumber: widget.phoneNumber, image: image);
-      //   await DBHelper().insertContact(contactDetails);
-      //   Navigator.pushNamedAndRemoveUntil(
-      //     context,
-      //     AppRoutes.home,
-      //     (Route<dynamic> route) => false, // This condition removes all previous routes
-      //   );
-      // }, icon: const Icon(Icons.save)),
-    );
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: <Widget>[
+                _imageFile != null
+                    ? ClipOval(
+                        child: Image.memory(
+                          _imageFile!,
+                          width: 200.0,
+                          height: 200.0,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : ClipOval(
+                        child: Container(
+                          width: 200.0,
+                          height: 200.0,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.person, size: 50),
+                        ),
+                      ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon:
+                          const Icon(Icons.photo_library, color: Colors.white),
+                      onPressed: () => _pickImage(ImageSource.gallery),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => _pickImage(ImageSource.camera),
+                    ),
+                  ],
+                ),
+                TextField(
+                  controller: _nameController,
+                  style: const TextStyle(
+                    color: Colors.white, // Text color
+                  ),
+                  cursorColor: Colors.white,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    labelStyle: TextStyle(
+                      color: Colors.white, // Label text color
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white, // Border color when focused
+                        width: 2.0,
+                      ),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white, // Border color when not focused
+                        width: 2.0,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.transparent, // Background color
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                TextField(
+                  style: const TextStyle(
+                    color: Colors.white, // Text color
+                  ),
+                  controller:
+                      TextEditingController(text: widget.contact.phoneNumber),
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    labelStyle: TextStyle(
+                      color: Colors.white, // Label text color
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white, // Border color when focused
+                        width: 2.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white, // Border color when not focused
+                        width: 2.0,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.transparent, // Background color
+                  ),
+                  enabled: false,
+                ),
+              ],
+            ),
+          ),
+        )
+        // floatingActionButton: IconButton(onPressed: () async {
+        //   Uint8List? image = await getImageBytes(_imageFile);
+        //   ContactItem contactDetails = ContactItem(name: _nameController.text, phoneNumber: widget.phoneNumber, image: image);
+        //   await DBHelper().insertContact(contactDetails);
+        //   Navigator.pushNamedAndRemoveUntil(
+        //     context,
+        //     AppRoutes.home,
+        //     (Route<dynamic> route) => false, // This condition removes all previous routes
+        //   );
+        // }, icon: const Icon(Icons.save)),
+        );
   }
 }

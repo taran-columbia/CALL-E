@@ -4,10 +4,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:poc_wgj/constants.dart';
 import 'package:poc_wgj/models/contact_model.dart';
 import 'package:poc_wgj/screens/edit_contact.dart';
+import 'package:poc_wgj/widgets/icon_text_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
-
 
 class Calling extends StatefulWidget {
   final ContactItem? contact;
@@ -19,7 +19,8 @@ class Calling extends StatefulWidget {
 
 class _CallingState extends State<Calling> {
   // static const platform = MethodChannel('com.example.channel/overlay');
-  static const platform = MethodChannel('com.example.wgj.poc_wgj/accessibility');
+  static const platform =
+      MethodChannel('com.example.wgj.poc_wgj/accessibility');
   String? name = '';
   Uint8List? image;
   String? phoneNumber = '';
@@ -28,7 +29,7 @@ class _CallingState extends State<Calling> {
   @override
   void initState() {
     super.initState();
-    name = widget.contact?.name ;
+    name = widget.contact?.name;
     image = widget.contact?.image;
     phoneNumber = widget.contact?.phoneNumber;
     id = widget.contact?.id;
@@ -41,26 +42,26 @@ class _CallingState extends State<Calling> {
     resetPref();
     // const phoneNumber = '+917597924752';
     // Set the flag indicating the call was initiated by the Flutter app
-    if(phoneNumber!=null || phoneNumber!=''){
+    if (phoneNumber != null || phoneNumber != '') {
       if (callType == 'Phone call') {
-      await makePhoneCall(phoneNumber!);
-    } else {
-      final bool isEnabled = await isAccessibilityServiceEnabled(context);
-       if (!isEnabled) {
-        _showAccessibilityServiceDialog(context);
-      }else{
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('isInitiatedByCALLE', true);
-        await prefs.setString('callType', callType);
-        // Launch WhatsApp with the specific contact
-        var url = Uri.parse('https://wa.me/$phoneNumber');
-        if (await canLaunchUrl(url)) {
-          await launchUrl(url);
+        await makePhoneCall(phoneNumber!);
+      } else {
+        final bool isEnabled = await isAccessibilityServiceEnabled(context);
+        if (!isEnabled) {
+          _showAccessibilityServiceDialog(context);
         } else {
-          throw 'Could not launch $url';
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isInitiatedByCALLE', true);
+          await prefs.setString('callType', callType);
+          // Launch WhatsApp with the specific contact
+          var url = Uri.parse('https://wa.me/$phoneNumber');
+          if (await canLaunchUrl(url)) {
+            await launchUrl(url);
+          } else {
+            throw 'Could not launch $url';
+          }
         }
       }
-    }
     }
   }
 
@@ -71,9 +72,9 @@ class _CallingState extends State<Calling> {
     await prefs.remove('returnFromCall');
   }
 
-
   Future<bool> isAccessibilityServiceEnabled(BuildContext context) async {
-    final bool isEnabled = await platform.invokeMethod('isAccessibilityServiceEnabled');
+    final bool isEnabled =
+        await platform.invokeMethod('isAccessibilityServiceEnabled');
     return isEnabled;
   }
 
@@ -134,7 +135,10 @@ class _CallingState extends State<Calling> {
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
-        title: Text(name ?? 'No Name', style: const TextStyle(color: Colors.white),),
+        title: Text(
+          name ?? 'No Name',
+          style: const TextStyle(color: Colors.white),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
@@ -142,65 +146,114 @@ class _CallingState extends State<Calling> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      EditContact(contact: ContactItem(name: name!, phoneNumber: phoneNumber!, id: id, image: image)),
+                  builder: (context) => EditContact(
+                      contact: ContactItem(
+                          name: name!,
+                          phoneNumber: phoneNumber!,
+                          id: id,
+                          image: image)),
                 ),
               );
-        
             },
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Center(
-          child: Column(
-          children: <Widget>[
-            image != null
-                ? ClipOval(
-                    child: Image.memory(
-                      image!,
-                      width: 200.0,
-                      height: 200.0,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : ClipOval(
-                    child: Container(
-                      width: 200.0,
-                      height: 200.0,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.person, size: 50),
-                    ),
-                  ),
-            const SizedBox(height: 20.0,),
-            Text(name??'No Name', style: const TextStyle(color: AppColors.secondaryColor, fontFamily: 'Poppins', fontWeight: FontWeight.bold, fontSize: 30.0),),
-            const SizedBox(height: 10.0,),
-            Text(phoneNumber??'No Phone Number', style: const TextStyle(color: AppColors.secondaryColor, fontFamily: 'Poppins', fontSize: 20.0),),
-            const SizedBox(height: 20.0,),
-            
-                ElevatedButton(
-                  onPressed: () async {
-                    await initiateCall('Video call', context);
-                  },
-                  child: const Text('Video Call'),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                image != null
+                    ? ClipOval(
+                        child: Image.memory(
+                          image!,
+                          width: 200.0,
+                          height: 200.0,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : ClipOval(
+                        child: Container(
+                          width: 200.0,
+                          height: 200.0,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.person, size: 50),
+                        ),
+                      ),
+                const SizedBox(
+                  height: 20.0,
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await initiateCall('Voice call', context);
-                  },
-                  child: const Text('Voice Call'),
+                Text(
+                  name ?? 'No Name',
+                  style: const TextStyle(
+                      color: AppColors.secondaryColor,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30.0),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await initiateCall('Phone call', context);
-                  },
-                  child: const Text('Phone Call'),
+                const SizedBox(
+                  height: 10.0,
                 ),
+                Text(
+                  phoneNumber ?? 'No Phone Number',
+                  style: const TextStyle(
+                      color: AppColors.secondaryColor,
+                      fontFamily: 'Poppins',
+                      fontSize: 20.0),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    IconTextButton(
+                        icon: const Image(
+                          height: 40.0,
+                          width: 40.0,
+                          image: AssetImage('assets/whatsapp_logo.jpg'),
+                        ),
+                        label: 'Video Call',
+                        onPressed: () async {
+                          await initiateCall('Video call', context);
+                        }),
+                    IconTextButton(
+                      icon: const Image(
+                        height: 40.0,
+                        width: 40.0,
+                        image: AssetImage('assets/whatsapp_logo.jpg'),
+                      ),
+                      label: 'Voice Call',
+                      onPressed: () async {
+                        await initiateCall('Voice call', context);
+                      },
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    IconTextButton(
+                      icon: Icon(
+                        Icons.call,
+                        size: 40.0,
+                        color: Colors.grey[500],
+                      ),
+                      label: 'Voice Call',
+                      onPressed: () async {
+                        await initiateCall('Phone call', context);
+                      },
+                    )
+                  ],
+                )
               ],
             ),
-        )
-      ),
+          )),
+      )
     );
   }
 }
