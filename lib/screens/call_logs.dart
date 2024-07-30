@@ -154,11 +154,11 @@ class _CallLogScreenState extends State<CallLogScreen> {
                       children: [
                         Text(
                           contact['formattedTime'],
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white, fontFamily: AppColors.fontFamily, fontWeight: FontWeight.w700),
                         ),
                         Text(
                           contact['formattedDate'],
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white, fontFamily: AppColors.fontFamily, fontWeight: FontWeight.w700),
                         ),
                       ],
                     ),
@@ -178,11 +178,11 @@ class _CallLogScreenState extends State<CallLogScreen> {
                           }
                         : null,
                     titleTextStyle: const TextStyle(
-                        fontFamily: 'Poppins',
+                        fontFamily: AppColors.fontFamily,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),
                     subtitleTextStyle: const TextStyle(
-                        fontFamily: 'Poppins',
+                        fontFamily: AppColors.fontFamily,
                         color: Color.fromARGB(255, 227, 149, 231)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -197,7 +197,7 @@ class _CallLogScreenState extends State<CallLogScreen> {
       appBar: AppBar(
         title: const Text(
           'Call Logs',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontFamily: AppColors.fontFamily, fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.primaryColor,
       ),

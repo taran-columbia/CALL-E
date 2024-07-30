@@ -115,6 +115,7 @@ class _HomeState extends State<Home> {
                               Text(
                                 contact.name,
                                 style: const TextStyle(
+                                  fontFamily: AppColors.fontFamily,
                                     color: AppColors.secondaryColor,
                                     fontWeight: FontWeight.bold),
                               )
@@ -133,7 +134,7 @@ class _HomeState extends State<Home> {
           'CALL-E',
           style: TextStyle(
               color: Colors.white,
-              fontFamily: 'Poppins',
+              fontFamily: AppColors.fontFamily,
               fontWeight: FontWeight.w600),
         ),
         backgroundColor: AppColors.primaryColor,

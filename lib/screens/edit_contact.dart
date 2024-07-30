@@ -99,7 +99,7 @@ class _EditContactState extends State<EditContact> {
           backgroundColor: AppColors.primaryColor,
           title: const Text(
             'Contact Details',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white, fontFamily: AppColors.fontFamily, fontWeight: FontWeight.bold),
           ),
           actions: [
             if (widget.contact.id != null)
@@ -191,13 +191,16 @@ class _EditContactState extends State<EditContact> {
                 TextField(
                   controller: _nameController,
                   style: const TextStyle(
-                    color: Colors.white, // Text color
+                    color: Colors.white, 
+                    fontFamily: AppColors.fontFamily// Text color
                   ),
                   cursorColor: Colors.white,
                   decoration: const InputDecoration(
                     labelText: 'Name',
                     labelStyle: TextStyle(
-                      color: Colors.white, // Label text color
+                      color: Colors.white,
+                      fontFamily: AppColors.fontFamily,
+                      fontWeight: FontWeight.bold // Label text color
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
@@ -220,14 +223,17 @@ class _EditContactState extends State<EditContact> {
                 ),
                 TextField(
                   style: const TextStyle(
-                    color: Colors.white, // Text color
+                    color: Colors.white,
+                    fontFamily: AppColors.fontFamily // Text color
                   ),
                   controller:
                       TextEditingController(text: widget.contact.phoneNumber),
                   decoration: const InputDecoration(
                     labelText: 'Phone Number',
                     labelStyle: TextStyle(
-                      color: Colors.white, // Label text color
+                      color: Colors.white,
+                      fontFamily: AppColors.fontFamily,
+                      fontWeight: FontWeight.bold // Label text color
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(

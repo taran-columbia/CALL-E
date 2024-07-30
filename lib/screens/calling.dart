@@ -136,8 +136,8 @@ class _CallingState extends State<Calling> {
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
         title: Text(
-          name ?? 'No Name',
-          style: const TextStyle(color: Colors.white),
+          'Call $name',
+          style: const TextStyle(color: Colors.white, fontFamily: AppColors.fontFamily, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -188,7 +188,7 @@ class _CallingState extends State<Calling> {
                   name ?? 'No Name',
                   style: const TextStyle(
                       color: AppColors.secondaryColor,
-                      fontFamily: 'Poppins',
+                      fontFamily: AppColors.fontFamily,
                       fontWeight: FontWeight.bold,
                       fontSize: 30.0),
                 ),
@@ -199,7 +199,7 @@ class _CallingState extends State<Calling> {
                   phoneNumber ?? 'No Phone Number',
                   style: const TextStyle(
                       color: AppColors.secondaryColor,
-                      fontFamily: 'Poppins',
+                      fontFamily: AppColors.fontFamily,
                       fontSize: 20.0),
                 ),
                 const SizedBox(

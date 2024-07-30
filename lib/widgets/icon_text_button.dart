@@ -40,7 +40,7 @@ class IconTextButton extends StatelessWidget {
               label,
               style: const TextStyle(
                 fontSize: 16.0,
-                fontFamily: 'Poppins',
+                fontFamily: AppColors.fontFamily,
                 color: AppColors.secondaryColor,
                 fontWeight: FontWeight.w700
               ),

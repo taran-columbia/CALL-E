@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:poc_wgj/constants.dart';
 
 class Loading extends StatefulWidget {
   const Loading({super.key});
@@ -47,7 +48,7 @@ void setup() async {
                 color: Colors.white,
                 fontSize: 30.0,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Poppins'
+                fontFamily: AppColors.fontFamily
               ),
             ),
             )

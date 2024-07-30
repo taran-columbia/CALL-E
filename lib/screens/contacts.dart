@@ -118,13 +118,15 @@ class _ContactsState extends State<Contacts> {
               //   fillColor: AppColors.backgroundColor, // Set your desired background color
               // ),
               style: const TextStyle(
-                color: Colors.white, // Text color
+                color: Colors.white,
+                fontFamily: AppColors.fontFamily // Text color
               ),
               cursorColor: Colors.white,
               decoration: const InputDecoration(
             labelText: 'Search by name or phone number',
             labelStyle: TextStyle(
-              color: Colors.white, // Label text color
+              color: Colors.white,
+              fontFamily: AppColors.fontFamily // Label text color
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
@@ -172,11 +174,11 @@ class _ContactsState extends State<Contacts> {
                           );
                         },
                         titleTextStyle: const TextStyle(
-                            fontFamily: 'Poppins',
+                            fontFamily: AppColors.fontFamily,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                         subtitleTextStyle: const TextStyle(
-                            fontFamily: 'Poppins', color: Color.fromARGB(255, 227, 149, 231)),
+                            fontFamily: AppColors.fontFamily, color: Color.fromARGB(255, 227, 149, 231)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                           side: const BorderSide(
@@ -193,7 +195,7 @@ class _ContactsState extends State<Contacts> {
       appBar: AppBar(
         title: const Text(
           'Contacts',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontFamily: AppColors.fontFamily, fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.primaryColor,
       ),
