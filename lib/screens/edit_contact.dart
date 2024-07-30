@@ -172,26 +172,72 @@ class _EditContactState extends State<EditContact> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 IconButton(
-                  icon: const Icon(Icons.photo_library),
+                  icon: const Icon(Icons.photo_library, color: Colors.white),
                   onPressed: () => _pickImage(ImageSource.gallery),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.camera_alt),
+                  icon: const Icon(Icons.camera_alt, color: Colors.white,),
                   onPressed: () => _pickImage(ImageSource.camera),
                 ),
               ],
             ),
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
+              style: const TextStyle(
+                color: Colors.white, // Text color
+              ),
+              cursorColor: Colors.white,
+              decoration: const InputDecoration(
+            labelText: 'Name',
+            labelStyle: TextStyle(
+              color: Colors.white, // Label text color
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white, // Border color when focused
+                width: 2.0,
+              ),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white, // Border color when not focused
+                width: 2.0,
+              ),
+            ),
+            filled: true,
+            fillColor: Colors.transparent, // Background color
+          ),
+        
             ),
             const SizedBox(
               height: 20.0,
             ),
             TextField(
+              style: const TextStyle(
+                color: Colors.white, // Text color
+              ),
               controller:
                   TextEditingController(text: widget.contact.phoneNumber),
-              decoration: const InputDecoration(labelText: 'Phone Number'),
+              decoration: const InputDecoration(
+            labelText: 'Phone Number',
+            labelStyle: TextStyle(
+              color: Colors.white, // Label text color
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white, // Border color when focused
+                width: 2.0,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white, // Border color when not focused
+                width: 2.0,
+              ),
+            ),
+            filled: true,
+            fillColor: Colors.transparent, // Background color
+          ),
               enabled: false,
             ),
           ],

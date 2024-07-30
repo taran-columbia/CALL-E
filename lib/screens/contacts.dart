@@ -111,12 +111,36 @@ class _ContactsState extends State<Contacts> {
             padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
             child: TextField(
               controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Search by name or phone number',
-                border: OutlineInputBorder(),
-                filled: true, // This makes the background opaque
-                fillColor: AppColors.backgroundColor, // Set your desired background color
+              // decoration: const InputDecoration(
+              //   labelText: 'Search by name or phone number',
+              //   border: OutlineInputBorder(),
+              //   filled: true, // This makes the background opaque
+              //   fillColor: AppColors.backgroundColor, // Set your desired background color
+              // ),
+              style: const TextStyle(
+                color: Colors.white, // Text color
               ),
+              cursorColor: Colors.white,
+              decoration: const InputDecoration(
+            labelText: 'Search by name or phone number',
+            labelStyle: TextStyle(
+              color: Colors.white, // Label text color
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white, // Border color when focused
+                width: 2.0,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white, // Border color when not focused
+                width: 2.0,
+              ),
+            ),
+            filled: true,
+            fillColor: Colors.transparent, // Background color
+          ),
             ),
           ),
           Expanded(
@@ -131,6 +155,7 @@ class _ContactsState extends State<Contacts> {
                     itemBuilder: (context, index) {
                       Contact contact = filteredContacts[index];
                       return ListTile(
+                        leading: const Icon(Icons.person, color: Colors.white, size: 40.0,),
                         contentPadding:
                             const EdgeInsets.fromLTRB(2.0, 4.0, 2.0, 4.0),
                         title: Text(contact.displayName ?? 'Name Undefined'),
@@ -146,12 +171,12 @@ class _ContactsState extends State<Contacts> {
                             ),
                           );
                         },
-                        titleTextStyle: TextStyle(
+                        titleTextStyle: const TextStyle(
                             fontFamily: 'Poppins',
-                            color: Colors.purple[600],
+                            color: Colors.white,
                             fontWeight: FontWeight.bold),
                         subtitleTextStyle: const TextStyle(
-                            fontFamily: 'Poppins', color: Colors.purple),
+                            fontFamily: 'Poppins', color: Color.fromARGB(255, 227, 149, 231)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                           side: const BorderSide(
