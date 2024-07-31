@@ -78,7 +78,8 @@ class _CallLogScreenState extends State<CallLogScreen> {
   }
 
 //will not work in case of numbers of other countries
-  String removeCountryCode(String phoneNumber) {
+  String removeCountryCode(String number) {
+    String phoneNumber = number.replaceAll(' ', '');
     // List of known country codes
     final countryCodes = [
       '+1',
