@@ -197,7 +197,7 @@ class _CallLogScreenState extends State<CallLogScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Call Logs',
+          'Missed Calls',
           style: TextStyle(color: Colors.white, fontFamily: AppColors.fontFamily, fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.primaryColor,
