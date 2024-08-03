@@ -2,5 +2,5 @@
     <!-- Existing string resources -->
     <string name="app_name">Your App Name</string>
     <!-- Add this line -->
-    <string name="accessibility_service_description">This service helps to position an overlay arrow pointing to the video call button in WhatsApp.</string>
+    <string name="accessibility_service_description">This service helps to initiate video and voice calls in WhatsApp.</string>
 </resources>
