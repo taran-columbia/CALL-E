@@ -9,6 +9,14 @@ Instead of scrolling through long contact lists, users can quickly identify and 
 
 ---
 
+## Demo  
+
+Here’s a quick preview of Call-E in action:  
+
+![App Demo](assets/CallE.gif)  
+
+---
+
 ## Features (Version 2)  
 - **Contact Management (CRUD):** Add, edit, and manage caller details from the device’s contact list  
 - **Multi-Mode Calling:** Place calls via traditional, WhatsApp voice, or WhatsApp video with a single tap  
